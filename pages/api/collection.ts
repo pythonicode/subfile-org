@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import crypto from 'crypto'
 
 type Data = {
-    createdAt: number,
+    created_at: number,
     id: string,
     key: string
 }
@@ -53,7 +53,7 @@ export default async function handler(
     const key = encrypt(data.uuid);
     if (decrypt(key) != data.uuid) return res.status(500).json({ error: "Failed to encrypt API key" });
     const response: Data = {
-        createdAt: new Date(data.createdAt).getTime(),
+        created_at: new Date(data.createdAt).getTime(),
         id: data.uuid,
         key: key,
     }
