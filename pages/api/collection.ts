@@ -20,12 +20,12 @@ function encrypt(input: string) {
     let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
     let encrypted = cipher.update(input);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return iv.toString('base64') + encrypted.toString('base64');
+    return iv.toString('hex') + encrypted.toString('hex');
 }
 
 function decrypt(input: string) {
-    let iv = Buffer.from(input.slice(0, IV_LENGTH + 8), 'base64');
-    let encryptedText = Buffer.from(input.slice(IV_LENGTH + 8), 'base64');
+    let iv = Buffer.from(input.slice(0, IV_LENGTH * 2), 'hex');
+    let encryptedText = Buffer.from(input.slice(IV_LENGTH * 2), 'hex');
     let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
     let decrypted = decipher.update(encryptedText);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
