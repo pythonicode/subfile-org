@@ -7,9 +7,13 @@ type Data = {
     expiry: number
 }
 
+type Error = {
+    error: string
+}
+
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Data>
+    res: NextApiResponse<Data | Error>
 ) {
     const url = "https://api.estuary.tech/user/api-keys?perms=upload&expiry=720h"
     const result = await fetch(url, {
@@ -19,6 +23,7 @@ export default async function handler(
             "Authorization": "Bearer " + process.env.ESTUARY_API_KEY,
         }
     })
+    if (result.status !== 200) return res.status(500).json({ error: "Failed to get API key" })
     const data = await result.json()
     res.status(200).json({
         token: data.token,
