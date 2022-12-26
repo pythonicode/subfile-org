@@ -3,7 +3,8 @@ import crypto from 'crypto'
 const IV_LENGTH = 16; // For AES, this is always 16
 const ENCRYPTION_KEY = process.env.ESTUARY_ENCRYPTION_KEY || "0123456789abcdef0123456789abcdef"; // Must be 256 bits (32 characters)
 
-export function encrypt(input: string) {
+export function hash(input: string) {
+    return crypto.createHash("sha256").update(input).digest("hex");
     let iv = crypto.randomBytes(IV_LENGTH);
     let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY), iv);
     let encrypted = cipher.update(input);

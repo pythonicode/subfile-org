@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { decrypt, encrypt } from '@/lib/cryptography'
+import { hash } from '@/lib/cryptography'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
@@ -30,8 +30,7 @@ export default async function handler(
     });
     if (result.status !== 200) return res.status(500).json({ error: "Failed to get API key" })
     const data = await result.json()
-    const key = encrypt(data.uuid);
-    if (decrypt(key) != data.uuid) return res.status(500).json({ error: "Failed to encrypt API key" });
+    const key = hash(data.uuid);
     const response: Data = {
         created_at: new Date(data.createdAt).getTime(),
         id: data.uuid,
